@@ -13,23 +13,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 🔹 Paso 1: Guardar la clave privada en un archivo temporal
-      - name: Save SSH private key
-        run: |
-          echo "${{ secrets.VM_KEY }}" > /tmp/vm_key
-          chmod 600 /tmp/vm_key
-
-      # 🚀 Paso 2: Test de conexión SSH
+      # 🚀 Paso 1: Test de conexión SSH
       - name: Test SSH Connection
-        run: |
-          ssh -i /tmp/vm_key -o StrictHostKeyChecking=no ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} "echo 'SSH Connection Successful!'"
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_KEY }}
+          debug: true
+          script: |
+            echo "SSH Connection Successful!"
 
-      # 📦 Paso 3: Subir archivos a la VM
+      # 📦 Paso 2: Subir archivos a la VM
       - name: Upload files to VM
-        run: |
-          scp -i /tmp/vm_key -o StrictHostKeyChecking=no -r ./ ${{ secrets.VM_USER }}@${{ secrets.VM_IP }}:~/Blue-Green
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_KEY }}
+          source: "."
+          target: "~/Blue-Green"
 
-      # ⚙️ Paso 4: Ejecutar scripts de despliegue
+      # ⚙️ Paso 3: Ejecutar scripts de despliegue
       - name: Execute deploy script
-        run: |
-          ssh -i /tmp/vm_key -o StrictHostKeyChecking=no ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} "cd ~/Blue-Green/scripts && bash deploy_green.sh && bash switch.sh green"
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_KEY }}
+          script: |
+            cd ~/Blue-Green/scripts
+            bash deploy_green.sh
+            bash switch.sh green
