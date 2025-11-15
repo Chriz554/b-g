@@ -2,24 +2,33 @@ name: Deploy Blue-Green
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to VM
-        uses: appleboy/ssh-action@v1.0.0
+      - name: Upload files to VM
+        uses: appleboy/scp-action@v0.1.0
         with:
-          host: ${{ secrets.VM_HOST }}
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_KEY }}
+          source: "."
+          target: "~/Blue-Green"
+
+      - name: Execute deploy script
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_KEY }}
           script: |
-            cd blue-green-deploy
-            git pull
-            bash scripts/deploy-green.sh
-            bash scripts/switch.sh green
+            cd ~/Blue-Green/scripts
+            bash deploy_green.sh
+            bash switch.sh green

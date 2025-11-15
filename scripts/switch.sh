@@ -1,13 +1,11 @@
 #!/bin/bash
-if [[ $1 == "blue" ]]; then
-    sudo sed -i 's/3002/3001/' /etc/nginx/nginx.conf
-    echo "Switched to BLUE"
-elif [[ $1 == "green" ]]; then
-    sudo sed -i 's/3001/3002/' /etc/nginx/nginx.conf
-    echo "Switched to GREEN"
+COLOR=$1
+
+if [ "$COLOR" = "blue" ]; then
+    sed -i 's/server 127.0.0.1:3002/server 127.0.0.1:3001/' /etc/nginx/conf.d/default.conf
 else
-    echo "Use: ./switch.sh [blue|green]"
-    exit 1
+    sed -i 's/server 127.0.0.1:3001/server 127.0.0.1:3002/' /etc/nginx/conf.d/default.conf
 fi
 
-sudo systemctl restart nginx
+sudo systemctl reload nginx
+echo "Nginx ahora apunta a $COLOR"
