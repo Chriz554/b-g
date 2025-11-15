@@ -13,6 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 🚀 Paso 1: Test de conexión SSH
+      - name: Test SSH Connection
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_KEY }}
+          script: |
+            echo "SSH Connection Successful!"
+
+      # 📦 Paso 2: Subir archivos a la VM
       - name: Upload files to VM
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -22,6 +33,7 @@ jobs:
           source: "."
           target: "~/Blue-Green"
 
+      # ⚙️ Paso 3: Ejecutar scripts de despliegue
       - name: Execute deploy script
         uses: appleboy/ssh-action@v0.1.8
         with:
