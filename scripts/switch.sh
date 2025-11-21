@@ -2,10 +2,15 @@
 COLOR=$1
 
 if [ "$COLOR" = "blue" ]; then
-    sed -i 's/server 127.0.0.1:3002/server 127.0.0.1:3001/' /etc/nginx/conf.d/default.conf
+    NEW_LINE="server 127.0.0.1:3001;"
+elif [ "$COLOR" = "green" ]; then
+    NEW_LINE="server 127.0.0.1:3002;"
 else
-    sed -i 's/server 127.0.0.1:3001/server 127.0.0.1:3002/' /etc/nginx/conf.d/default.conf
+    echo "Uso: switch.sh [blue|green]"
+    exit 1
 fi
 
+sudo sed -i "s|#ACTIVE_APP|$NEW_LINE|" /etc/nginx/conf.d/default.conf
 sudo systemctl reload nginx
-echo "Nginx ahora apunta a $COLOR"
+
+echo "Nginx apunta ahora a $COLOR"
