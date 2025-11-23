@@ -52,6 +52,6 @@ jobs:
             # Desplegar BLUE
             bash deploy_blue.sh
             bash switch.sh blue
-            # Si quieres desplegar GREEN solo cambia los nombres
+            # desplegar GREEN solo cambiando los nombres
             # bash deploy_green.sh
             # bash switch.sh green
