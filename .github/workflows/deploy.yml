@@ -10,8 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Paso 0: Clonar el repositorio
       - name: Checkout code
         uses: actions/checkout@v3
+
+      # Paso 0.5: Eliminar carpeta .git para evitar conflictos y permisos
+      - name: Remove .git folder
+        run: rm -rf .git
 
       # Paso 1: Test de conexión SSH
       - name: Test SSH Connection
@@ -31,12 +36,13 @@ jobs:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_KEY }}
-          source: "./"
+          source: |
+            app
+            scripts
+            Dockerfile
+            nginx
           target: "~/Blue-Green"
           overwrite: true
-          exclude: |
-            .git/
-            .github/
 
       # Paso 3: Ejecutar scripts de despliegue
       - name: Execute deploy script
@@ -47,5 +53,9 @@ jobs:
           key: ${{ secrets.VM_KEY }}
           script: |
             cd ~/Blue-Green/scripts
+            # Desplegar BLUE
             bash deploy_blue.sh
             bash switch.sh blue
+            # Si quieres desplegar GREEN solo cambia los nombres
+            # bash deploy_green.sh
+            # bash switch.sh green
