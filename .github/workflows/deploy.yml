@@ -36,11 +36,7 @@ jobs:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_KEY }}
-          source: |
-            app
-            scripts
-            Dockerfile
-            nginx
+          source: "./"
           target: "~/Blue-Green"
           overwrite: true
 
