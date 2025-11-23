@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_KEY }}
           source: "."
-          target: "~/Blue-Green"
+          target: "~/app"
           overwrite: true
 
       # Paso 3: Ejecutar scripts de despliegue
@@ -43,6 +43,6 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_KEY }}
           script: |
-            cd ~/Blue-Green/scripts
+            cd ~/app/scripts
             bash deploy_green.sh
             bash switch.sh green
