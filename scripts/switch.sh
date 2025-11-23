@@ -2,12 +2,18 @@
 COLOR=$1
 
 if [ "$COLOR" = "blue" ]; then
-    sed -i 's/server 127.0.0.1:9081/server 127.0.0.1:9080/' /etc/nginx/conf.d/default.conf
+    UPSTREAM_PORT=9080
+elif [ "$COLOR" = "green" ]; then
+    UPSTREAM_PORT=9081
 else
-    sed -i 's/server 127.0.0.1:9080/server 127.0.0.1:9081/' /etc/nginx/conf.d/default.conf
+    echo "Debe indicar blue o green"
+    exit 1
 fi
 
-sudo sed -i "s|#ACTIVE_APP|$NEW_LINE|" /etc/nginx/conf.d/default.conf
+# Reemplaza current_app en nginx
+sudo sed -i "s|server 127.0.0.1:[0-9]\+;|server 127.0.0.1:$UPSTREAM_PORT;|g" /etc/nginx/conf.d/default.conf
+
+# Recarga nginx
 sudo systemctl reload nginx
 
 echo "Nginx apunta ahora a $COLOR"
