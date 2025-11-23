@@ -34,6 +34,9 @@ jobs:
           source: "./*"
           target: "~/Blue-Green"
           overwrite: true
+          exclude: |
+            .git/
+            .github/
 
       # Paso 3: Ejecutar scripts de despliegue
       - name: Execute deploy script
