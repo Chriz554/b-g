@@ -1,4 +1,5 @@
 #!/bin/bash
+cd ~/Blue-Green
 docker build -t app_blue .
 docker stop app_blue || true
 docker rm app_blue || true
