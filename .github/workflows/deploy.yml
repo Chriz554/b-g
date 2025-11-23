@@ -47,5 +47,5 @@ jobs:
           key: ${{ secrets.VM_KEY }}
           script: |
             cd ~/Blue-Green/scripts
-            bash deploy_green.sh
-            bash switch.sh green
+            bash deploy_blue.sh
+            bash switch.sh blue
