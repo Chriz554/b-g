@@ -12,6 +12,9 @@ fi
 # Cargar variables del .env
 source "$ENV_FILE"
 
+# Asegura permisos de ejecución siempre que se ejecute
+chmod +x ./deploy_blue.sh ./deploy_green.sh
+
 COLOR="$CURRENT_PRODUCTION"
 
 if [ "$COLOR" = "blue" ]; then
