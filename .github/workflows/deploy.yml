@@ -50,8 +50,19 @@ jobs:
           script: |
             cd ~/Blue-Green/scripts
             # Desplegar BLUE
+
+            ENV_FILE = ".env"
+
+            if[! -f "$ENV_FILE"]; then
+              echo "CURRENT_PRODUCTION=blue" > "$ENV_FILE"
+            fi
+            
+            source "$ENV_FILE"
+            
+            if[ "$CURRENT_PRODUCTION" == "blue"]; then
             bash deploy_blue.sh
             bash switch.sh blue
-            # desplegar GREEN solo cambiando los nombres
-            # bash deploy_green.sh
-            # bash switch.sh green
+            else
+            bash deploy_green.sh
+            bash switch.sh green
+            fi
