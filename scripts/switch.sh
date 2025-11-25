@@ -3,17 +3,30 @@ COLOR=$1
 
 if [ "$COLOR" = "blue" ]; then
     UPSTREAM_PORT=9080
+    START_CONTAINER="app_blue"
+    STOP_CONTAINER="app_green"
 elif [ "$COLOR" = "green" ]; then
     UPSTREAM_PORT=9081
+    START_CONTAINER="app_green"
+    STOP_CONTAINER="app_blue"
 else
     echo "Debe indicar blue o green"
     exit 1
 fi
 
-# Reemplaza current_app en nginx
+echo "→ Iniciando $START_CONTAINER..."
+docker start $START_CONTAINER 2>/dev/null || echo "$START_CONTAINER ya estaba iniciado"
+
+echo "→ Deteniendo $STOP_CONTAINER..."
+docker stop $STOP_CONTAINER 2>/dev/null || echo "$STOP_CONTAINER ya estaba detenido"
+
+
+# Cambiar upstream en nginx
+echo "→ Cambiando NGINX a puerto $UPSTREAM_PORT…"
 sudo sed -i "s|server 127.0.0.1:[0-9]\+;|server 127.0.0.1:$UPSTREAM_PORT;|g" /etc/nginx/conf.d/default.conf
 
-# Recarga nginx
+# Recargar nginx
+echo "→ Recargando NGINX…"
 sudo systemctl reload nginx
 
-echo "Nginx apunta ahora a $COLOR"
+echo "✔ NGINX ahora apunta a $COLOR (puerto $UPSTREAM_PORT)"
