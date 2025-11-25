@@ -12,7 +12,7 @@ fi
 # Cargar variables del .env
 source "$ENV_FILE"
 
-# Asegura permisos de ejecución siempre que se ejecute
+# Asegura permisos de ejecución
 chmod +x ./deploy_blue.sh ./deploy_green.sh
 
 COLOR="$CURRENT_PRODUCTION"
@@ -22,11 +22,13 @@ if [ "$COLOR" = "blue" ]; then
     UPSTREAM_PORT=9080
     START_CONTAINER="app_blue"
     STOP_CONTAINER="app_green"
+    NEXT_COLOR="green"
 elif [ "$COLOR" = "green" ]; then
     ./deploy_green.sh
     UPSTREAM_PORT=9081
     START_CONTAINER="app_green"
     STOP_CONTAINER="app_blue"
+    NEXT_COLOR="blue"
 else
     echo "Debe indicar blue o green"
     exit 1
@@ -46,4 +48,8 @@ sudo sed -i "s|server 127.0.0.1:[0-9]\+;|server 127.0.0.1:$UPSTREAM_PORT;|g" /ho
 echo "→ Recargando NGINX…"
 sudo systemctl reload nginx
 
-echo "✔ NGINX ahora apunta a $COLOR (puerto $UPSTREAM_PORT)"
+# Alternar color en el archivo .env 
+echo "CURRENT_PRODUCTION=$NEXT_COLOR" > "$ENV_FILE"
+
+echo "NGINX ahora apunta a $COLOR (puerto $UPSTREAM_PORT)" 
+echo " Próximo deploy irá a: $NEXT_COLOR" 
