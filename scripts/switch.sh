@@ -1,12 +1,10 @@
 #!/bin/bash
 
-
- # Desplegar BLUE
 ENV_FILE = ".env"
-if[! -f "$ENV_FILE"]; then
+if [! -f "$ENV_FILE"]; then
     echo "CURRENT_PRODUCTION=blue" > "$ENV_FILE"
 fi
-            
+
 source "$ENV_FILE"
 
 COLOR="$CURRENT_PRODUCTION"
@@ -31,7 +29,6 @@ docker start $START_CONTAINER 2>/dev/null || echo "$START_CONTAINER ya estaba in
 
 echo "→ Deteniendo $STOP_CONTAINER..."
 docker stop $STOP_CONTAINER 2>/dev/null || echo "$STOP_CONTAINER ya estaba detenido"
-
 
 # Cambiar upstream en nginx
 echo "→ Cambiando NGINX a puerto $UPSTREAM_PORT…"
