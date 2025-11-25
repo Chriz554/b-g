@@ -1,6 +1,9 @@
 #!/bin/bash
 
+set -e
+
 ENV_FILE = ".env"
+
 if [! -f "$ENV_FILE"]; then
     echo "CURRENT_PRODUCTION=blue" > "$ENV_FILE"
 fi
