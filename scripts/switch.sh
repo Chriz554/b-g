@@ -4,10 +4,12 @@ set -e
 
 ENV_FILE=".env"
 
-if [! -f "$ENV_FILE"]; then
+# Si no existe el archivo .env, crearlo
+if [ ! -f "$ENV_FILE" ]; then
     echo "CURRENT_PRODUCTION=blue" > "$ENV_FILE"
 fi
 
+# Cargar variables del .env
 source "$ENV_FILE"
 
 COLOR="$CURRENT_PRODUCTION"
@@ -28,10 +30,10 @@ else
 fi
 
 echo "→ Iniciando $START_CONTAINER..."
-docker start $START_CONTAINER 2>/dev/null || echo "$START_CONTAINER ya estaba iniciado"
+docker start "$START_CONTAINER" 2>/dev/null || echo "$START_CONTAINER ya estaba iniciado"
 
 echo "→ Deteniendo $STOP_CONTAINER..."
-docker stop $STOP_CONTAINER 2>/dev/null || echo "$STOP_CONTAINER ya estaba detenido"
+docker stop "$STOP_CONTAINER" 2>/dev/null || echo "$STOP_CONTAINER ya estaba detenido"
 
 # Cambiar upstream en nginx
 echo "→ Cambiando NGINX a puerto $UPSTREAM_PORT…"
