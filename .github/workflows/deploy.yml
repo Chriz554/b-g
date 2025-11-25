@@ -49,20 +49,5 @@ jobs:
           key: ${{ secrets.VM_KEY }}
           script: |
             cd ~/Blue-Green/scripts
-            # Desplegar BLUE
-
-            ENV_FILE = ".env"
-
-            if[! -f "$ENV_FILE"]; then
-              echo "CURRENT_PRODUCTION=blue" > "$ENV_FILE"
-            fi
-            
-            source "$ENV_FILE"
-            
-            if[ "$CURRENT_PRODUCTION" == "blue"]; then
-            bash deploy_blue.sh
-            bash switch.sh blue
-            else
-            bash deploy_green.sh
-            bash switch.sh green
-            fi
+           
+            bash switch.sh
