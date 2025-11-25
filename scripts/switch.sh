@@ -1,11 +1,23 @@
 #!/bin/bash
-COLOR=$1
+
+
+ # Desplegar BLUE
+ENV_FILE = ".env"
+if[! -f "$ENV_FILE"]; then
+    echo "CURRENT_PRODUCTION=blue" > "$ENV_FILE"
+fi
+            
+source "$ENV_FILE"
+
+COLOR="$CURRENT_PRODUCTION"
 
 if [ "$COLOR" = "blue" ]; then
+    ./deploy_blue.sh
     UPSTREAM_PORT=9080
     START_CONTAINER="app_blue"
     STOP_CONTAINER="app_green"
 elif [ "$COLOR" = "green" ]; then
+    ./deploy_green.sh
     UPSTREAM_PORT=9081
     START_CONTAINER="app_green"
     STOP_CONTAINER="app_blue"
