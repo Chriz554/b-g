@@ -40,7 +40,7 @@ docker stop "$STOP_CONTAINER" 2>/dev/null || echo "$STOP_CONTAINER ya estaba det
 
 # Cambiar upstream en nginx
 echo "→ Cambiando NGINX a puerto $UPSTREAM_PORT…"
-sudo sed -i "s|server 127.0.0.1:[0-9]\+;|server 127.0.0.1:$UPSTREAM_PORT;|g" /etc/nginx/conf.d/default.conf
+sudo sed -i "s|server 127.0.0.1:[0-9]\+;|server 127.0.0.1:$UPSTREAM_PORT;|g" /home/cris/Blue-Green/nginx/default.conf
 
 # Recargar nginx
 echo "→ Recargando NGINX…"
